@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travelmanager/reservation/ReservationPage.dart';
 import 'airplane/airplane_dao.dart';
 import 'airplane/airplane_list_page.dart';
 import 'customer/customer_list_page.dart'; // Adjust the import based on your project structure
@@ -86,7 +87,10 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/reservationList');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ReservationPage()),
+                );
               },
               child: Text('Go to Reservations'),
             ),

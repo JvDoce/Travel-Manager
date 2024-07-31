@@ -5,27 +5,10 @@ import 'BookList.dart';
 import 'BookButton.dart';
 import 'ReservationDetail.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Reservation Page',
-      home: ReservationPage(title: 'Reservation Home Page'),
-    );
-  }
-}
 
 class ReservationPage extends StatefulWidget {
-  const ReservationPage({super.key, required this.title});
+  const ReservationPage({super.key});
 
-  final String title;
 
   @override
   State<ReservationPage> createState() => _MyHomePageState();
@@ -44,7 +27,7 @@ class _MyHomePageState extends State<ReservationPage> {
     if ((width > height) && (width > 720)){
       return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: const Text('Reservation Page'),
         ),
         body: Row(
           children: [
@@ -62,7 +45,7 @@ class _MyHomePageState extends State<ReservationPage> {
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: const Text('Reservation Page'),
         ),
         body: Center(
               child: MobileView(),
