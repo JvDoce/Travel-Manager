@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 import 'customer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AddCustomerPage extends StatefulWidget {
-  final Function(Customer) onAdd;
+class UpdateCustomerPage extends StatefulWidget {
+  final Customer customer;
+  final Function(Customer) onUpdate;
   final SharedPreferences sharedPreferences;
 
-  const AddCustomerPage({
-    required this.onAdd,
+  const UpdateCustomerPage({
+    required this.customer,
+    required this.onUpdate,
     required this.sharedPreferences,
     Key? key,
   }) : super(key: key);
 
   @override
-  _AddCustomerPageState createState() => _AddCustomerPageState();
+  _UpdateCustomerPageState createState() => _UpdateCustomerPageState();
 }
 
-class _AddCustomerPageState extends State<AddCustomerPage> {
+class _UpdateCustomerPageState extends State<UpdateCustomerPage> {
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _addressController;
@@ -25,10 +27,10 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
   @override
   void initState() {
     super.initState();
-    _firstNameController = TextEditingController();
-    _lastNameController = TextEditingController();
-    _addressController = TextEditingController();
-    _birthdayController = TextEditingController();
+    _firstNameController = TextEditingController(text: widget.customer.firstName);
+    _lastNameController = TextEditingController(text: widget.customer.lastName);
+    _addressController = TextEditingController(text: widget.customer.address);
+    _birthdayController = TextEditingController(text: widget.customer.birthday);
   }
 
   @override
@@ -44,7 +46,7 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Customer'),
+        title: Text('Update Customer'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -71,18 +73,18 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    Customer newCustomer = Customer(
-                      null, // Passing null for id since it will be auto-generated
+                  onPressed: () async {
+                    Customer updatedCustomer = Customer(
+                      widget.customer.id,
                       _firstNameController.text,
                       _lastNameController.text,
                       _addressController.text,
                       _birthdayController.text,
                     );
-                    widget.onAdd(newCustomer);
-                    Navigator.of(context).pop();
+                    await widget.onUpdate(updatedCustomer);
+                    Navigator.of(context).popUntil((route) => route.isFirst); // Pop until the first route (CustomerListPage)
                   },
-                  child: Text('Add'),
+                  child: Text('Update'),
                 ),
               ],
             ),

@@ -1,21 +1,33 @@
-///Customer data model
 import 'package:floor/floor.dart';
 
-@entity
+@Entity(tableName: 'Customer')
 class Customer {
-  static int ID = 1;
-
-  @primaryKey
-  final int customer_id;
+  @PrimaryKey(autoGenerate: true)
+  final int? id;
   final String firstName;
   final String lastName;
   final String address;
   final String birthday;
 
-  Customer(this.customer_id, this.firstName, this.lastName, this.address,
-      this.birthday) {
-    if (customer_id > ID) {
-      ID = customer_id;
-    }
+  Customer(this.id, this.firstName, this.lastName, this.address, this.birthday);
+
+  factory Customer.fromMap(Map<String, dynamic> map) {
+    return Customer(
+      map['id'],
+      map['firstName'],
+      map['lastName'],
+      map['address'],
+      map['birthday'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'firstName': firstName,
+      'lastName': lastName,
+      'address': address,
+      'birthday': birthday,
+    };
   }
 }

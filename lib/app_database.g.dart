@@ -104,7 +104,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Airplane` (`airplane_id` INTEGER NOT NULL, `type` TEXT NOT NULL, `passengers` INTEGER NOT NULL, `maxSpeed` REAL NOT NULL, `range` REAL NOT NULL, PRIMARY KEY (`airplane_id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Customer` (`customer_id` INTEGER NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `address` TEXT NOT NULL, `birthday` TEXT NOT NULL, PRIMARY KEY (`customer_id`))');
+            'CREATE TABLE IF NOT EXISTS `Customer` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `address` TEXT NOT NULL, `birthday` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Flight` (`flight_id` INTEGER NOT NULL, `departureCity` TEXT NOT NULL, `destinationCity` TEXT NOT NULL, `departureTime` TEXT NOT NULL, `arrivalTime` TEXT NOT NULL, PRIMARY KEY (`flight_id`))');
         await database.execute(
@@ -237,42 +237,39 @@ class _$CustomerDao extends CustomerDao {
   _$CustomerDao(
     this.database,
     this.changeListener,
-  )   : _queryAdapter = QueryAdapter(database, changeListener),
+  )   : _queryAdapter = QueryAdapter(database),
         _customerInsertionAdapter = InsertionAdapter(
             database,
             'Customer',
             (Customer item) => <String, Object?>{
-                  'customer_id': item.customer_id,
+                  'id': item.id,
                   'firstName': item.firstName,
                   'lastName': item.lastName,
                   'address': item.address,
                   'birthday': item.birthday
-                },
-            changeListener),
+                }),
         _customerUpdateAdapter = UpdateAdapter(
             database,
             'Customer',
-            ['customer_id'],
+            ['id'],
             (Customer item) => <String, Object?>{
-                  'customer_id': item.customer_id,
+                  'id': item.id,
                   'firstName': item.firstName,
                   'lastName': item.lastName,
                   'address': item.address,
                   'birthday': item.birthday
-                },
-            changeListener),
+                }),
         _customerDeletionAdapter = DeletionAdapter(
             database,
             'Customer',
-            ['customer_id'],
+            ['id'],
             (Customer item) => <String, Object?>{
-                  'customer_id': item.customer_id,
+                  'id': item.id,
                   'firstName': item.firstName,
                   'lastName': item.lastName,
                   'address': item.address,
                   'birthday': item.birthday
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -287,10 +284,10 @@ class _$CustomerDao extends CustomerDao {
   final DeletionAdapter<Customer> _customerDeletionAdapter;
 
   @override
-  Future<List<Customer>> findAllCustomers() async {
+  Future<List<Customer>> getAllCustomers() async {
     return _queryAdapter.queryList('SELECT * FROM Customer',
         mapper: (Map<String, Object?> row) => Customer(
-            row['customer_id'] as int,
+            row['id'] as int?,
             row['firstName'] as String,
             row['lastName'] as String,
             row['address'] as String,
@@ -298,18 +295,15 @@ class _$CustomerDao extends CustomerDao {
   }
 
   @override
-  Stream<Customer?> findCustomerById(int id) {
-    return _queryAdapter.queryStream(
-        'SELECT * FROM Customer WHERE customer_id = ?1',
+  Future<Customer?> findCustomerById(int id) async {
+    return _queryAdapter.query('SELECT * FROM Customer WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Customer(
-            row['customer_id'] as int,
+            row['id'] as int?,
             row['firstName'] as String,
             row['lastName'] as String,
             row['address'] as String,
             row['birthday'] as String),
-        arguments: [id],
-        queryableName: 'Customer',
-        isView: false);
+        arguments: [id]);
   }
 
   @override
