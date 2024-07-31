@@ -73,12 +73,8 @@ class _CustomerListPageState extends State<CustomerListPage> {
                       MaterialPageRoute(
                         builder: (context) => CustomerDetailPage(
                           customer: customer,
-                          onUpdate: (updatedCustomer) {
-                            _updateCustomer(updatedCustomer);
-                          },
-                          onDelete: (customerToDelete) {
-                            _deleteCustomer(customerToDelete);
-                          },
+                          onUpdate: onUpdateCustomer,
+                          onDelete: onDeleteCustomer,
                           sharedPreferences: widget.sharedPreferences,
                         ),
                       ),
@@ -93,24 +89,31 @@ class _CustomerListPageState extends State<CustomerListPage> {
     );
   }
 
-  Future<void> _addCustomer(Customer customer) async {
+  void _addCustomer(Customer customer) async {
     await widget.customerDao.insertCustomer(customer);
     setState(() {
       customersFuture = widget.customerDao.getAllCustomers();
     });
   }
 
-  Future<void> _updateCustomer(Customer customer) async {
+  void onUpdateCustomer(Customer customer) async {
     await widget.customerDao.updateCustomer(customer);
     setState(() {
       customersFuture = widget.customerDao.getAllCustomers();
     });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Customer updated successfully')),
+    );
   }
 
-  Future<void> _deleteCustomer(Customer customer) async {
+  void onDeleteCustomer(Customer customer) async {
     await widget.customerDao.deleteCustomer(customer);
     setState(() {
       customersFuture = widget.customerDao.getAllCustomers();
     });
+    Navigator.of(context).pop(); // Pop the detail page after deletion
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Customer deleted successfully')),
+    );
   }
 }
