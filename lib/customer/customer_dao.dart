@@ -4,10 +4,10 @@ import 'customer.dart';
 @dao
 abstract class CustomerDao {
   @Query('SELECT * FROM Customer')
-  Future<List<Customer>> findAllCustomers();
+  Future<List<Customer>> getAllCustomers();
 
-  @Query('SELECT * FROM Customer WHERE customer_id = :id')
-  Stream<Customer?> findCustomerById(int id);
+  @Query('SELECT * FROM Customer WHERE id = :id')
+  Future<Customer?> findCustomerById(int id);
 
   @insert
   Future<void> insertCustomer(Customer customer);
