@@ -1,21 +1,33 @@
-///Airplane Model
 import 'package:floor/floor.dart';
 
-@entity
+@Entity(tableName: 'Airplane')
 class Airplane {
-  static int ID = 1;
-
-  @primaryKey
-  final int airplane_id;
+  @PrimaryKey(autoGenerate: true)
+  final int? id;
   final String type;
   final int passengers;
   final double maxSpeed;
   final double range;
 
+  Airplane(this.id, this.type, this.passengers, this.maxSpeed, this.range);
 
-  Airplane(this.airplane_id, this.type, this.passengers, this.maxSpeed, this.range){
-    if (airplane_id>ID){
-      ID = airplane_id;
-    }
+  factory Airplane.fromMap(Map<String, dynamic> map) {
+    return Airplane(
+      map['id'],
+      map['type'],
+      map['passengers'],
+      map['maxSpeed'], // Corrected from 'masSpeed' to 'maxSpeed'
+      map['range'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'type': type,
+      'passengers': passengers,
+      'maxSpeed': maxSpeed,
+      'range': range,
+    };
   }
 }

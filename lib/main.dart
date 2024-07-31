@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'airplane/airplane_dao.dart';
+import 'airplane/airplane_list_page.dart';
 import 'customer/customer_list_page.dart'; // Adjust the import based on your project structure
 //import '../airplane/airplane_list_page.dart'; // Adjust the import based on your project structure
 //import '../flight/flight_list_page.dart'; // Adjust the import based on your project structure
 //import '../reservation/reservation_list_page.dart'; // Adjust the import based on your project structure
 import 'app_database.dart'; // Adjust the import based on your project structure
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,10 +39,10 @@ class MyApp extends StatelessWidget {
           customerDao: database.customerDao,
           sharedPreferences: sharedPreferences,
         ),
- //       '/airplaneList': (context) => AirplaneListPage(
- //         flightDao: database.flightDao, // Ensure you have flightDao in your AppDatabase
- //         sharedPreferences: sharedPreferences,
- //       ),
+        '/airplaneList': (context) => AirplaneListPage(
+          airplaneDao: database.airplaneDao,  // Ensure you have airplaneDao in your AppDatabase
+          sharedPreferences: sharedPreferences,
+        ),
  //       '/flightList': (context) => FlightListPage(
  //         flightDao: database.flightDao, // Ensure you have flightDao in your AppDatabase
 //          sharedPreferences: sharedPreferences,

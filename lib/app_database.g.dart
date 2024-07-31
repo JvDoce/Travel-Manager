@@ -102,7 +102,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Airplane` (`airplane_id` INTEGER NOT NULL, `type` TEXT NOT NULL, `passengers` INTEGER NOT NULL, `maxSpeed` REAL NOT NULL, `range` REAL NOT NULL, PRIMARY KEY (`airplane_id`))');
+            'CREATE TABLE IF NOT EXISTS `Airplane` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `type` TEXT NOT NULL, `passengers` INTEGER NOT NULL, `maxSpeed` REAL NOT NULL, `range` REAL NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Customer` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `address` TEXT NOT NULL, `birthday` TEXT NOT NULL)');
         await database.execute(
@@ -147,7 +147,7 @@ class _$AirplaneDao extends AirplaneDao {
             database,
             'Airplane',
             (Airplane item) => <String, Object?>{
-                  'airplane_id': item.airplane_id,
+                  'id': item.id,
                   'type': item.type,
                   'passengers': item.passengers,
                   'maxSpeed': item.maxSpeed,
@@ -157,9 +157,9 @@ class _$AirplaneDao extends AirplaneDao {
         _airplaneUpdateAdapter = UpdateAdapter(
             database,
             'Airplane',
-            ['airplane_id'],
+            ['id'],
             (Airplane item) => <String, Object?>{
-                  'airplane_id': item.airplane_id,
+                  'id': item.id,
                   'type': item.type,
                   'passengers': item.passengers,
                   'maxSpeed': item.maxSpeed,
@@ -169,9 +169,9 @@ class _$AirplaneDao extends AirplaneDao {
         _airplaneDeletionAdapter = DeletionAdapter(
             database,
             'Airplane',
-            ['airplane_id'],
+            ['id'],
             (Airplane item) => <String, Object?>{
-                  'airplane_id': item.airplane_id,
+                  'id': item.id,
                   'type': item.type,
                   'passengers': item.passengers,
                   'maxSpeed': item.maxSpeed,
@@ -192,10 +192,10 @@ class _$AirplaneDao extends AirplaneDao {
   final DeletionAdapter<Airplane> _airplaneDeletionAdapter;
 
   @override
-  Future<List<Airplane>> findAllAirplanes() async {
+  Future<List<Airplane>> getAllAirplanes() async {
     return _queryAdapter.queryList('SELECT * FROM Airplane',
         mapper: (Map<String, Object?> row) => Airplane(
-            row['airplane_id'] as int,
+            row['id'] as int?,
             row['type'] as String,
             row['passengers'] as int,
             row['maxSpeed'] as double,
@@ -204,10 +204,9 @@ class _$AirplaneDao extends AirplaneDao {
 
   @override
   Stream<Airplane?> findAirplaneById(int id) {
-    return _queryAdapter.queryStream(
-        'SELECT * FROM Airplane WHERE airplane_id = ?1',
+    return _queryAdapter.queryStream('SELECT * FROM Airplane WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Airplane(
-            row['airplane_id'] as int,
+            row['id'] as int?,
             row['type'] as String,
             row['passengers'] as int,
             row['maxSpeed'] as double,

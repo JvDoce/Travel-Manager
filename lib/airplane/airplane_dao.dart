@@ -4,9 +4,9 @@ import 'airplane.dart';
 @dao
 abstract class AirplaneDao {
   @Query('SELECT * FROM Airplane')
-  Future<List<Airplane>> findAllAirplanes();
+  Future<List<Airplane>> getAllAirplanes();
 
-  @Query('SELECT * FROM Airplane WHERE airplane_id = :id')
+  @Query('SELECT * FROM Airplane WHERE id = :id')
   Stream<Airplane?> findAirplaneById(int id);
 
   @insert
