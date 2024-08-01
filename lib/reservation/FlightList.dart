@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:travelmanager/flights/flight.dart';
 import 'package:travelmanager/flights/flights_dao.dart';
-import 'package:travelmanager/reservation/AddReservation.dart';
+import 'AddReservation.dart';
 import '../app_database.dart';
 import '../customer/customer.dart';
-import '../customer/customer_dao.dart';
 
 class FlightListPage extends StatefulWidget {
-  final Customer selectedCustomer;
 
+  final Customer selectedCustomer;
   FlightListPage({required this.selectedCustomer});
 
   @override

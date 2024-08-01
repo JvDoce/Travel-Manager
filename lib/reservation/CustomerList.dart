@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travelmanager/reservation/AddReservation.dart';
-import 'package:travelmanager/reservation/FlightLIst.dart';
+import 'FlightList.dart';
 import '../app_database.dart';
 import '../customer/customer.dart';
 import '../customer/customer_dao.dart';
@@ -62,12 +62,11 @@ class _CustomerListPageState extends State<CustomerListPage> {
               actions: <Widget>[
                 ElevatedButton(
                     onPressed: (){
-                      Navigator.pop(context);
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => FlightListPage()),
+                      context,
+                      MaterialPageRoute(builder: (context) => FlightListPage(selectedCustomer: customer)),
                       );
-                    },
+                      },
                     child: Text('Confirm')
                 ),
                 ElevatedButton(
