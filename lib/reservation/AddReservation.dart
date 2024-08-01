@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:travelmanager/app_database.dart';
+import 'package:travelmanager/reservation/reservation.dart';
+import 'package:travelmanager/reservation/reservation_dao.dart';
 import '../customer/customer.dart';
+import 'package:travelmanager/app_database.dart';
+import '../flights/flight.dart';
 import 'CustomerList.dart';
 
 
 class AddReservation extends StatefulWidget {
-
   final Customer customer;
-
-  AddReservation({required this.customer});
+  // final Flight flight;
+  AddReservation({required this.customer,});
 
   @override
   _AddReservationState createState() => _AddReservationState();
@@ -19,6 +23,9 @@ class _AddReservationState extends State<AddReservation> {
   late TextEditingController customerId;
   late TextEditingController flightId;
   String? resDate;
+
+  List<Reservation> bookFlight = [];
+  late ReservationDao myDao;
 
 
   final List<String> days = [
@@ -38,6 +45,16 @@ class _AddReservationState extends State<AddReservation> {
     super.initState();
     customerId = TextEditingController();
     flightId = TextEditingController();
+
+    $FloorAppDatabase.databaseBuilder("reservationDB").build().then((database){
+      myDao = database.reservationDao;
+      myDao.findAllReservations().then((ListOfReservation){
+        setState(() {
+          bookFlight.clear();
+          bookFlight.addAll(ListOfReservation);
+        });
+      });
+    });
   }
 
   @override
@@ -75,6 +92,14 @@ class _AddReservationState extends State<AddReservation> {
             });
           },
         ),
+        ElevatedButton(onPressed: (){
+          setState(() {
+            customerId.value = widget.customer.id as TextEditingValue;
+            var newReserve = Reservation(Reservation.ID++, customerId.value as int, flightId.value as int, resDate!);
+            myDao.insertReservation(newReserve);
+            bookFlight.add(newReserve);
+          });
+        }, child: const Text('Add')),
       ],
     )
       )

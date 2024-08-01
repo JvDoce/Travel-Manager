@@ -62,6 +62,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
               actions: <Widget>[
                 ElevatedButton(
                     onPressed: (){
+                      Navigator.pop(context);
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => AddReservation(customer: customer)),
