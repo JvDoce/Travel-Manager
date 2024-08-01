@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'CustomerList.dart';
 
 
 class AddReservation extends StatefulWidget {
@@ -49,6 +50,12 @@ class _AddReservationState extends State<AddReservation> {
         TextField(
           controller: customerId,
           decoration: InputDecoration(labelText: 'Customer Name'),
+          onTap: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CustomerList()),
+            );
+          },
         ),
         TextField(
           controller: flightId,
@@ -56,7 +63,7 @@ class _AddReservationState extends State<AddReservation> {
         ),
         DropdownButton<String>(
           value: resDate,
-          hint: Text('Select Reservation Day'),
+          hint: Text('Select Day'),
           items: days.map((String day) {
             return DropdownMenuItem<String>(
               value: day,
