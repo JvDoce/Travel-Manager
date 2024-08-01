@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:travelmanager/airplane/airplane.dart';
 import 'package:travelmanager/airplane/airplane_dao.dart';
 import 'package:travelmanager/flights/flight.dart';
-import 'package:travelmanager/flights/flights_dao.dart';
 import 'AddReservation.dart';
 import '../app_database.dart';
 import '../customer/customer.dart';
@@ -96,7 +95,7 @@ class _AirplaneListPageState extends State<AirplaneListPage> {
                     );
                   },
                   child: ListTile(
-                    title: Text('Flight: ${index}'),
+                    title: Text('Airplane: ${index}'),
                   ),
                 );
               },
