@@ -6,6 +6,7 @@ import '../customer/customer.dart';
 import 'package:travelmanager/app_database.dart';
 import '../flights/flight.dart';
 import 'CustomerList.dart';
+import 'ReservationPage.dart';
 
 
 class AddReservation extends StatefulWidget {
@@ -98,8 +99,13 @@ class _AddReservationState extends State<AddReservation> {
             var newReserve = Reservation(Reservation.ID++, customerId.value as int, flightId.value as int, resDate!);
             myDao.insertReservation(newReserve);
             bookFlight.add(newReserve);
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ReservationPage()),
+            );
           });
-        }, child: const Text('Add')),
+        }, child: const Text('Reserve a Flight')),
       ],
     )
       )
