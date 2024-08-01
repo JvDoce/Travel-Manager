@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import '../customer/customer.dart';
 import 'CustomerList.dart';
 
 
 class AddReservation extends StatefulWidget {
+
+  final Customer customer;
+
+  AddReservation({required this.customer});
+
   @override
   _AddReservationState createState() => _AddReservationState();
 }
 
 class _AddReservationState extends State<AddReservation> {
+
+
   late TextEditingController customerId;
   late TextEditingController flightId;
   String? resDate;
+
 
   final List<String> days = [
     'Monday',
@@ -21,6 +30,8 @@ class _AddReservationState extends State<AddReservation> {
     'Saturday',
     'Sunday',
   ];
+
+
 
   @override
   void initState() {
@@ -47,20 +58,8 @@ class _AddReservationState extends State<AddReservation> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextField(
-          controller: customerId,
-          decoration: InputDecoration(labelText: 'Customer Name'),
-          onTap: (){
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CustomerList()),
-            );
-          },
-        ),
-        TextField(
-          controller: flightId,
-          decoration: InputDecoration(labelText: 'Flight Number'),
-        ),
+        _buildDetailItem('First Name: ', widget.customer.firstName),
+        _buildDetailItem('Last Name: ', widget.customer.lastName),
         DropdownButton<String>(
           value: resDate,
           hint: Text('Select Day'),
@@ -82,6 +81,33 @@ class _AddReservationState extends State<AddReservation> {
     );
   }
 
+
+  Widget _buildDetailItem(String label, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[600],
+            ),
+          ),
+          SizedBox(height: 4.0),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
+          ),
+          Divider(color: Colors.grey[400]),
+        ],
+      ),
+    );
+  }
 
 }
 

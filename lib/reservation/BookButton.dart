@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'AddReservation.dart';
+import 'package:travelmanager/reservation/CustomerList.dart';
 
 class BookButton extends StatelessWidget{
   BookButton({super.key});
@@ -12,7 +12,7 @@ class BookButton extends StatelessWidget{
         ElevatedButton(onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddReservation()),
+            MaterialPageRoute(builder: (context) => CustomerListPage()),
           );
         },
           child: const Text("Book a Flight"),
