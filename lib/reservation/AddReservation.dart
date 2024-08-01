@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:travelmanager/app_database.dart';
 import 'package:travelmanager/reservation/reservation.dart';
 import 'package:travelmanager/reservation/reservation_dao.dart';
+import '../airplane/airplane.dart';
 import '../customer/customer.dart';
 import '../flights/flight.dart';
 import 'ReservationPage.dart';
@@ -10,7 +11,8 @@ import 'ReservationPage.dart';
 class AddReservation extends StatefulWidget {
   final Customer customer;
   final Flight flight;
-  AddReservation({required this.customer, required this.flight});
+  final Airplane airplane;
+  AddReservation({required this.customer, required this.flight, required this.airplane});
 
   @override
   _AddReservationState createState() => _AddReservationState();
@@ -78,6 +80,7 @@ class _AddReservationState extends State<AddReservation> {
         _buildDetailItem('Last Name: ', widget.customer.lastName),
         _buildDetailItem('Departure: ', widget.flight.departureCity),
         _buildDetailItem('Destination: ', widget.flight.destinationCity),
+        _buildDetailItem('Destination: ', widget.airplane.type),
         DropdownButton<String>(
           value: resDate,
           hint: Text('Select Day'),
