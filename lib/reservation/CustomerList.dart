@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travelmanager/reservation/AddReservation.dart';
-// import 'package:floor/floor.dart';
+import 'package:travelmanager/reservation/FlightLIst.dart';
 import '../app_database.dart';
 import '../customer/customer.dart';
 import '../customer/customer_dao.dart';
@@ -65,7 +65,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => AddReservation(customer: customer)),
+                        MaterialPageRoute(builder: (context) => FlightListPage()),
                       );
                     },
                     child: Text('Confirm')

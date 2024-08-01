@@ -12,7 +12,7 @@ import 'ReservationPage.dart';
 class AddReservation extends StatefulWidget {
   final Customer customer;
   // final Flight flight;
-  AddReservation({required this.customer,});
+  AddReservation({required this.customer});
 
   @override
   _AddReservationState createState() => _AddReservationState();
@@ -94,17 +94,16 @@ class _AddReservationState extends State<AddReservation> {
           },
         ),
         ElevatedButton(onPressed: (){
-          setState(() {
-            customerId.value = widget.customer.id as TextEditingValue;
-            var newReserve = Reservation(Reservation.ID++, customerId.value as int, flightId.value as int, resDate!);
-            myDao.insertReservation(newReserve);
-            bookFlight.add(newReserve);
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ReservationPage()),
-            );
-          });
+          // setState(() {
+          //   customerId.value = widget.customer.id as TextEditingValue;
+          //   var newReserve = Reservation(Reservation.ID++, customerId.value as int, 1, resDate!);
+          //   myDao.insertReservation(newReserve);
+          //   bookFlight.add(newReserve);
+          // });
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ReservationPage()),
+          );
         }, child: const Text('Reserve a Flight')),
       ],
     )
