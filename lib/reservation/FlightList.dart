@@ -52,43 +52,53 @@ class _FlightListPageState extends State<FlightListPage> {
   }
 
   Widget _buildCustomerList() {
-    return ListView.builder(
-      itemCount: _flight.length,
-      itemBuilder: (context, index) {
-        final flight = _flight[index];
-        return GestureDetector(
-          onTap: (){
-            showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                title: Text('Notice'),
-                content: Text('Confirm Selected Flight'),
-                actions: <Widget>[
-                  ElevatedButton(
-                      onPressed: (){
+    return Column(
+        children: <Widget>[
+        if (_flight.isEmpty)
+    const Text('No Available Flight')
+    else
+      Expanded(child:
+      ListView.builder(
+        itemCount: _flight.length,
+        itemBuilder: (context, index) {
+          final flight = _flight[index];
+          return GestureDetector(
+            onTap: (){
+              showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: Text('Notice'),
+                  content: Text('Confirm Selected Flight'),
+                  actions: <Widget>[
+                    ElevatedButton(
+                        onPressed: (){
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) =>
+                                AddReservation(customer: widget.selectedCustomer, flight: flight)),
+                          );
+                        },
+                        child: Text('Confirm')
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
                         Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AddReservation(customer: widget.selectedCustomer, flight: flight)),
-                        );
                       },
-                      child: Text('Confirm')
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Cancel"),
-                  ),
-                ],
-              ),
-            );
-          },
-          child: ListTile(
-            title: Text('Flight: ${index}'),
-          ),
-        );
-      },
+                      child: const Text("Cancel"),
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: ListTile(
+              title: Text('Flight: ${index}'),
+            ),
+          );
+        },
+      )
+      )
+      ]
     );
   }
 }

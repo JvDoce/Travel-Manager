@@ -78,6 +78,8 @@ class _AddReservationState extends State<AddReservation> {
       children: [
         _buildDetailItem('First Name: ', widget.customer.firstName),
         _buildDetailItem('Last Name: ', widget.customer.lastName),
+        _buildDetailItem('Departure: ', widget.flight.departureCity),
+        _buildDetailItem('Destination: ', widget.flight.destinationCity),
         DropdownButton<String>(
           value: resDate,
           hint: Text('Select Day'),

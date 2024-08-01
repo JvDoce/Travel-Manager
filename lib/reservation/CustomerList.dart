@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:travelmanager/reservation/AddReservation.dart';
 import 'FlightList.dart';
 import '../app_database.dart';
 import '../customer/customer.dart';
@@ -48,42 +47,52 @@ class _CustomerListPageState extends State<CustomerListPage> {
   }
 
   Widget _buildCustomerList() {
-    return ListView.builder(
-      itemCount: _customers.length,
-      itemBuilder: (context, index) {
-        final customer = _customers[index];
-        return GestureDetector(
-          onTap: (){
-            showDialog<String>(
-                context: context,
-                builder: (BuildContext context) => AlertDialog(
-              title: Text('Notice'),
-              content: Text('Confirm Selected Customer'),
-              actions: <Widget>[
-                ElevatedButton(
-                    onPressed: (){
-                      Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => FlightListPage(selectedCustomer: customer)),
-                      );
-                      },
-                    child: Text('Confirm')
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        if (_customers.isEmpty)
+          const Text('Customer List Empty')
+        else
+          Expanded(child:
+          ListView.builder(
+            itemCount: _customers.length,
+            itemBuilder: (context, index) {
+              final customer = _customers[index];
+              return GestureDetector(
+                onTap: (){
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: Text('Notice'),
+                      content: Text('Confirm Selected Customer'),
+                      actions: <Widget>[
+                        ElevatedButton(
+                            onPressed: (){
+                              Navigator.pop(context);
+                              Navigator.push(context, MaterialPageRoute
+                                (builder: (context) => FlightListPage(selectedCustomer: customer)),
+                              );
+                            },
+                            child: Text('Confirm')
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Cancel"),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                child: ListTile(
+                  title: Text('${customer.firstName} ${customer.lastName}'),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Cancel"),
-                ),
-              ],
-            ),
-            );
-          },
-          child: ListTile(
-            title: Text('${customer.firstName} ${customer.lastName}'),
-          ),
-        );
-      },
+              );
+            },
+          )
+      )
+    ]
     );
   }
 }
