@@ -3,9 +3,7 @@ import 'package:travelmanager/app_database.dart';
 import 'package:travelmanager/reservation/reservation.dart';
 import 'package:travelmanager/reservation/reservation_dao.dart';
 import '../customer/customer.dart';
-import 'package:travelmanager/app_database.dart';
 import '../flights/flight.dart';
-import 'CustomerList.dart';
 import 'ReservationPage.dart';
 
 
@@ -95,18 +93,25 @@ class _AddReservationState extends State<AddReservation> {
             });
           },
         ),
-        ElevatedButton(onPressed: (){
-          // setState(() {
-          //   customerId.value = widget.customer.id as TextEditingValue;
-          //   var newReserve = Reservation(Reservation.ID++, customerId.value as int, 1, resDate!);
-          //   myDao.insertReservation(newReserve);
-          //   bookFlight.add(newReserve);
-          // });
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ReservationPage()),
-          );
-        }, child: const Text('Reserve a Flight')),
+        ElevatedButton(
+          onPressed: () async {
+            final newReserve = Reservation(
+              Reservation.ID++,
+              widget.customer.id as int,
+              widget.flight.flight_id,
+              resDate!,
+            );
+            await myDao.insertReservation(newReserve);
+            setState(() {
+              bookFlight.add(newReserve);
+            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ReservationPage()),
+            );
+          },
+          child: const Text('Reserve a Flight'),
+        ),
       ],
     )
       )
