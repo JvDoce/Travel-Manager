@@ -7,6 +7,10 @@ import '../customer/customer.dart';
 import '../customer/customer_dao.dart';
 
 class FlightListPage extends StatefulWidget {
+  final Customer selectedCustomer;
+
+  FlightListPage({required this.selectedCustomer});
+
   @override
   _FlightListPageState createState() => _FlightListPageState();
 }
@@ -23,15 +27,15 @@ class _FlightListPageState extends State<FlightListPage> {
   }
 
   Future<void> _initDatabase() async {
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    var database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     setState(() {
       _database = database;
       _flightDao = _database.flightDao;
-      _fetchCustomers();
+      _fetchFlight();
     });
   }
 
-  Future<void> _fetchCustomers() async {
+  Future<void> _fetchFlight() async {
     final customers = await _flightDao.findAllFlights();
     setState(() {
       _flight = customers;
@@ -52,7 +56,7 @@ class _FlightListPageState extends State<FlightListPage> {
     return ListView.builder(
       itemCount: _flight.length,
       itemBuilder: (context, index) {
-        final customer = _flight[index];
+        final flight = _flight[index];
         return GestureDetector(
           onTap: (){
             showDialog<String>(
@@ -63,11 +67,11 @@ class _FlightListPageState extends State<FlightListPage> {
                 actions: <Widget>[
                   ElevatedButton(
                       onPressed: (){
-                        // Navigator.pop(context);
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => AddReservation(customer: customer)),
-                        // );
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AddReservation(customer: widget.selectedCustomer, flight: flight)),
+                        );
                       },
                       child: Text('Confirm')
                   ),

@@ -11,8 +11,8 @@ import 'ReservationPage.dart';
 
 class AddReservation extends StatefulWidget {
   final Customer customer;
-  // final Flight flight;
-  AddReservation({required this.customer});
+  final Flight flight;
+  AddReservation({required this.customer, required this.flight});
 
   @override
   _AddReservationState createState() => _AddReservationState();
