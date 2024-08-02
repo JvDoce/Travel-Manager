@@ -53,55 +53,58 @@ class _AirplaneListPageState extends State<AirplaneListPage> {
   }
 
   Widget _buildCustomerList() {
-    return Column(
-        children: <Widget>[
-          if (_airplane.isEmpty)
-            const Text('No Available Flight')
-          else
-            Expanded(child:
-            ListView.builder(
-              itemCount: _airplane.length,
-              itemBuilder: (context, index) {
-                final airplane = _airplane[index];
-                return GestureDetector(
-                  onTap: (){
-                    showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                        title: Text('Notice'),
-                        content: Text('Confirm Selected Airplane'),
-                        actions: <Widget>[
-                          ElevatedButton(
-                              onPressed: (){
+    return Center(
+      child: Column(
+          children: <Widget>[
+            if (_airplane.isEmpty)
+              const Text('No Available Flight')
+            else
+              Expanded(child:
+              ListView.builder(
+                itemCount: _airplane.length,
+                itemBuilder: (context, index) {
+                  final airplane = _airplane[index];
+                  return GestureDetector(
+                    onTap: (){
+                      showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: Text('Notice'),
+                          content: Text('Confirm Selected Airplane'),
+                          actions: <Widget>[
+                            ElevatedButton(
+                                onPressed: (){
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) =>
+                                        AddReservation(selectedCustomer: widget.selectedCustomer,
+                                          selectedFlight: widget.selectedFlight,
+                                          selectedAirplane: airplane,)),
+                                  );
+                                },
+                                child: Text('Confirm')
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
                                 Navigator.pop(context);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) =>
-                                      AddReservation(customer: widget.selectedCustomer,
-                                        flight: widget.selectedFlight,
-                                        airplane: airplane,)),
-                                );
                               },
-                              child: Text('Confirm')
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Cancel"),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  child: ListTile(
-                    title: Text('Airplane: ${index}'),
-                  ),
-                );
-              },
-            )
-            )
-        ]
+                              child: const Text("Cancel"),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    child: ListTile(
+                      title: Text('Airplane: ${index}'),
+                    ),
+                  );
+                },
+              )
+              )
+          ]
+      ),
     );
+
   }
 }

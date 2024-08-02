@@ -9,20 +9,16 @@ import 'ReservationPage.dart';
 
 
 class AddReservation extends StatefulWidget {
-  final Customer customer;
-  final Flight flight;
-  final Airplane airplane;
-  AddReservation({required this.customer, required this.flight, required this.airplane});
+  final Customer selectedCustomer;
+  final Flight selectedFlight;
+  final Airplane selectedAirplane;
+  AddReservation({required this.selectedCustomer, required this.selectedFlight, required this.selectedAirplane});
 
   @override
   _AddReservationState createState() => _AddReservationState();
 }
 
 class _AddReservationState extends State<AddReservation> {
-
-
-  late TextEditingController customerId;
-  late TextEditingController flightId;
   String? resDate;
 
   List<Reservation> bookFlight = [];
@@ -44,8 +40,6 @@ class _AddReservationState extends State<AddReservation> {
   @override
   void initState() {
     super.initState();
-    customerId = TextEditingController();
-    flightId = TextEditingController();
 
     $FloorAppDatabase.databaseBuilder("reservationDB").build().then((database){
       myDao = database.reservationDao;
@@ -60,8 +54,6 @@ class _AddReservationState extends State<AddReservation> {
 
   @override
   void dispose() {
-    customerId.dispose();
-    flightId.dispose();
     super.dispose();
   }
 
@@ -76,11 +68,11 @@ class _AddReservationState extends State<AddReservation> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildDetailItem('First Name: ', widget.customer.firstName),
-        _buildDetailItem('Last Name: ', widget.customer.lastName),
-        _buildDetailItem('Departure: ', widget.flight.departureCity),
-        _buildDetailItem('Destination: ', widget.flight.destinationCity),
-        _buildDetailItem('Destination: ', widget.airplane.type),
+        _buildDetailItem('First Name: ', widget.selectedCustomer.firstName),
+        _buildDetailItem('Last Name: ', widget.selectedCustomer.lastName),
+        _buildDetailItem('Departure: ', widget.selectedFlight.departureCity),
+        _buildDetailItem('Destination: ', widget.selectedFlight.destinationCity),
+        _buildDetailItem('Airplane: ', widget.selectedAirplane.type),
         DropdownButton<String>(
           value: resDate,
           hint: Text('Select Day'),
@@ -100,8 +92,8 @@ class _AddReservationState extends State<AddReservation> {
           onPressed: () async {
             final newReserve = Reservation(
               Reservation.ID++,
-              widget.customer.id as int,
-              widget.flight.flight_id,
+              widget.selectedCustomer.id as int,
+              widget.selectedFlight.flight_id,
               resDate!,
             );
             await myDao.insertReservation(newReserve);

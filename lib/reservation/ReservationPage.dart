@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:travelmanager/reservation/reservation.dart';
 
+import '../airplane/airplane.dart';
+import '../customer/customer.dart';
+import '../flights/flight.dart';
 import 'BookList.dart';
 import 'BookButton.dart';
 import 'ReservationDetail.dart';
 
 
 class ReservationPage extends StatefulWidget {
-  const ReservationPage({super.key});
-
+  ReservationPage({super.key});
 
   @override
   State<ReservationPage> createState() => _MyHomePageState();
@@ -35,9 +38,9 @@ class _MyHomePageState extends State<ReservationPage> {
                 flex: 1,
                 child: TabletView(),
             ),
-            const Expanded(
+            Expanded(
               flex: 1,
-              child: ReservationDetail(),
+              child: ReservationDetail()
             )
           ],
         ),
