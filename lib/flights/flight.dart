@@ -1,5 +1,6 @@
 // A class that represents a flight with relevant details.
 class Flight {
+
   // The unique identifier for the flight. It can be null when creating a new flight.
   final int? id;
 
