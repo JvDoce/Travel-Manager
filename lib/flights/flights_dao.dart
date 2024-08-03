@@ -7,7 +7,7 @@ abstract class FlightDao {
   Future<List<Flight>> findAllFlights();
 
   @Query('SELECT * FROM Flight WHERE flight_id = :id')
-  Stream<Flight?> findFlightById(int id);
+  Future<Flight?> findFlightById(int id);
 
   @insert
   Future<void> insertFlight(Flight flight);

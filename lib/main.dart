@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travelmanager/reservation/ReservationPage.dart';
 import 'package:travelmanager/reservation/reservation.dart';
+import 'package:travelmanager/reservation/reservation_dao.dart';
 import 'airplane/airplane.dart';
 import 'airplane/airplane_dao.dart';
 import 'airplane/airplane_list_page.dart';
@@ -21,7 +22,6 @@ void main() async {
 
   final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
   final sharedPreferences = await SharedPreferences.getInstance();
-
   runApp(MyApp(database, sharedPreferences));
 }
 
@@ -29,8 +29,7 @@ class MyApp extends StatelessWidget {
   final AppDatabase database;
   final SharedPreferences sharedPreferences;
 
-
-  MyApp(this.database, this.sharedPreferences,);
+  MyApp(this.database, this.sharedPreferences);
 
   @override
   Widget build(BuildContext context) {

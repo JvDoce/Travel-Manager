@@ -1,65 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:travelmanager/reservation/ReservationDetail.dart';
 import 'package:travelmanager/reservation/reservation.dart';
 import 'package:travelmanager/reservation/reservation_dao.dart';
 import '../app_database.dart';
-import 'ReservationDetail.dart';
+import 'AddReservation.dart';
 
-class BookList extends StatefulWidget {
-  BookList({super.key});
+class BookListPage extends StatefulWidget {
 
   @override
-  _BookList createState() => _BookList();
+  _BookListPageState createState() => _BookListPageState();
 }
 
-class _BookList extends State<BookList> {
-  final List<Reservation> bookFlight = [];
-  late ReservationDao myDao;
+class _BookListPageState extends State<BookListPage> {
+  late AppDatabase _database;
+  late ReservationDao _reservationDao;
+  List<Reservation> _reservation = [];
 
   @override
   void initState() {
     super.initState();
+    _initDatabase();
+  }
 
-    $FloorAppDatabase.databaseBuilder("reservationDB").build().then((database){
-      myDao = database.reservationDao;
-      myDao.findAllReservations().then((ListOfReservation){
-        setState(() {
-          bookFlight.clear();
-          bookFlight.addAll(ListOfReservation);
-        });
-      });
+  Future<void> _initDatabase() async {
+    var database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    setState(() {
+      _database = database;
+      _reservationDao = _database.reservationDao;
+      _fetchReservation();
+    });
+  }
+
+  Future<void> _fetchReservation() async {
+    final reservation = await _reservationDao.findAllReservations();
+    setState(() {
+      _reservation = reservation;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          if (bookFlight.isEmpty)
-            const Text('There are no booked flight')
-          else
-            Expanded(
-              child: ListView.builder(
-                  itemCount: bookFlight.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        ReservationDetail();
-                      },
-                      child: SizedBox(
-                        height: 100,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text('Reservation: $index'),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-              ),
+    return Center(
+      child: Column(
+          children: <Widget>[
+            ElevatedButton(onPressed: () { AlignmentDirectional.center;
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddReservation()),
+            );
+            },
+              child: const Text("Book a Flight"),
             ),
-        ]
+            if (_reservation.isEmpty)
+              const Text('No Reservation')
+            else
+              Expanded(child:
+              ListView.builder(
+                itemCount: _reservation.length,
+                itemBuilder: (context, index) {
+                  final reservation = _reservation[index];
+                  return GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>
+                              ReservationDetail(reservation: reservation,)
+                          )
+                      );
+                    },
+                    child: ListTile(
+                        title: Text('Reservation: ${reservation.reservation_id}'),
+                        subtitle: Text('Flight: ${reservation.flight_Id} Date: ${reservation.reservationDate}')
+                    ),
+                  );
+                },
+              )
+              ),
+          ]
+      ),
     );
   }
 }
