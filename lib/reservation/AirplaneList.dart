@@ -36,9 +36,9 @@ class _AirplaneListPageState extends State<AirplaneListPage> {
   }
 
   Future<void> _fetchAirplane() async {
-    final customers = await _airplaneDao.getAllAirplanes();
+    final airplane = await _airplaneDao.getAllAirplanes();
     setState(() {
-      _airplane = customers;
+      _airplane = airplane;
     });
   }
 
@@ -74,14 +74,6 @@ class _AirplaneListPageState extends State<AirplaneListPage> {
                           actions: <Widget>[
                             ElevatedButton(
                                 onPressed: (){
-                                  Navigator.pop(context);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) =>
-                                        AddReservation(selectedCustomer: widget.selectedCustomer,
-                                          selectedFlight: widget.selectedFlight,
-                                          selectedAirplane: airplane,)),
-                                  );
                                 },
                                 child: Text('Confirm')
                             ),
@@ -96,7 +88,8 @@ class _AirplaneListPageState extends State<AirplaneListPage> {
                       );
                     },
                     child: ListTile(
-                      title: Text('Airplane: ${index}'),
+                      title: Text('Airplane: ${airplane.id}'),
+                      subtitle: Text('${airplane.type}')
                     ),
                   );
                 },

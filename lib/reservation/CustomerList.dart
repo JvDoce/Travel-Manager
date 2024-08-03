@@ -86,7 +86,8 @@ class _CustomerListPageState extends State<CustomerListPage> {
                       );
                     },
                     child: ListTile(
-                      title: Text('${customer.firstName} ${customer.lastName}'),
+                      title: Text('Customer ${customer.id}'),
+                      subtitle: Text('${customer.firstName} ${customer.lastName}'),
                     ),
                   );
                 },

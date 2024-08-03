@@ -36,9 +36,9 @@ class _FlightListPageState extends State<FlightListPage> {
   }
 
   Future<void> _fetchFlight() async {
-    final customers = await _flightDao.findAllFlights();
+    final flight = await _flightDao.findAllFlights();
     setState(() {
-      _flight = customers;
+      _flight = flight;
     });
   }
 
@@ -95,7 +95,8 @@ class _FlightListPageState extends State<FlightListPage> {
                       );
                     },
                     child: ListTile(
-                      title: Text('Flight: ${index}'),
+                      title: Text('Flight: ${flight.flight_id}'),
+                      subtitle: Text('Dpt: ${flight.departureCity} Dstn: ${flight.destinationCity}'),
                     ),
                   );
                 },
