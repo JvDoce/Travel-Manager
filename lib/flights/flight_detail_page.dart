@@ -4,16 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // FlightDetailPage allows the user to view and edit the details of a specific flight
 class FlightDetailPage extends StatefulWidget {
-  // The flight object that contains the details to be displayed
-  final Flight flight;
-  // Callback function for updating the flight details
-  final Function(Flight) onUpdate;
-  // Callback function for deleting the flight
-  final Function(Flight) onDelete;
-  // SharedPreferences instance for accessing and storing data
-  final SharedPreferences sharedPreferences;
+  final Flight flight; // The flight object whose details are to be viewed or edited
+  final Function(Flight) onUpdate; // Callback function for updating the flight
+  final Function(Flight) onDelete; // Callback function for deleting the flight
+  final SharedPreferences sharedPreferences; // SharedPreferences instance for storing preferences
 
-  // Constructor for initializing the FlightDetailPage with required parameters
+  // Constructor to initialize the FlightDetailPage with required parameters
   FlightDetailPage({
     required this.flight,
     required this.onUpdate,
@@ -26,10 +22,9 @@ class FlightDetailPage extends StatefulWidget {
 }
 
 class _FlightDetailPageState extends State<FlightDetailPage> {
-  // Key for the form used to validate user input
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>(); // GlobalKey for form validation
 
-  // Text controllers for handling user input
+  // Define text controllers for handling user input
   final _departureCityController = TextEditingController();
   final _destinationCityController = TextEditingController();
   final _departureTimeController = TextEditingController();
@@ -46,15 +41,25 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
   }
 
   @override
+  void dispose() {
+    // Dispose of controllers when the widget is removed from the widget tree
+    _departureCityController.dispose();
+    _destinationCityController.dispose();
+    _departureTimeController.dispose();
+    _arrivalTimeController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flight Details'),
+        title: Text('Flight Details'), // App bar title
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0), // Padding around the form
         child: Form(
-          key: _formKey,
+          key: _formKey, // Assign form key to the form
           child: Column(
             children: [
               // Input field for departure city
@@ -62,9 +67,8 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                 controller: _departureCityController,
                 decoration: InputDecoration(labelText: 'Departure City'),
                 validator: (value) {
-                  // Validation to ensure the input is not empty
                   if (value == null || value.isEmpty) {
-                    return 'Please enter departure city';
+                    return 'Please enter departure city'; // Validation message
                   }
                   return null;
                 },
@@ -74,9 +78,8 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                 controller: _destinationCityController,
                 decoration: InputDecoration(labelText: 'Destination City'),
                 validator: (value) {
-                  // Validation to ensure the input is not empty
                   if (value == null || value.isEmpty) {
-                    return 'Please enter destination city';
+                    return 'Please enter destination city'; // Validation message
                   }
                   return null;
                 },
@@ -86,9 +89,8 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                 controller: _departureTimeController,
                 decoration: InputDecoration(labelText: 'Departure Time'),
                 validator: (value) {
-                  // Validation to ensure the input is not empty
                   if (value == null || value.isEmpty) {
-                    return 'Please enter departure time';
+                    return 'Please enter departure time'; // Validation message
                   }
                   return null;
                 },
@@ -98,22 +100,22 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                 controller: _arrivalTimeController,
                 decoration: InputDecoration(labelText: 'Arrival Time'),
                 validator: (value) {
-                  // Validation to ensure the input is not empty
                   if (value == null || value.isEmpty) {
-                    return 'Please enter arrival time';
+                    return 'Please enter arrival time'; // Validation message
                   }
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20), // Spacing between form fields and buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   // Button to update flight details
                   ElevatedButton(
                     onPressed: () {
-                      // Validate form and update flight details
+                      // Validate form inputs
                       if (_formKey.currentState!.validate()) {
+                        // Create an updated Flight object with form inputs
                         final updatedFlight = Flight(
                           id: widget.flight.id,
                           departureCity: _departureCityController.text,
@@ -121,19 +123,19 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                           departureTime: _departureTimeController.text,
                           arrivalTime: _arrivalTimeController.text,
                         );
-                        widget.onUpdate(updatedFlight);
-                        Navigator.of(context).pop();
+                        widget.onUpdate(updatedFlight); // Call onUpdate callback with the updated Flight object
+                        Navigator.of(context).pop(); // Navigate back to the previous screen
                       }
                     },
-                    child: Text('Update'),
+                    child: Text('Update'), // Button label
                   ),
                   // Button to delete the flight
                   ElevatedButton(
                     onPressed: () {
-                      widget.onDelete(widget.flight);
-                      Navigator.of(context).pop();
+                      widget.onDelete(widget.flight); // Call onDelete callback with the current Flight object
+                      Navigator.of(context).pop(); // Navigate back to the previous screen
                     },
-                    child: Text('Delete'),
+                    child: Text('Delete'), // Button label
                   ),
                 ],
               ),
