@@ -106,7 +106,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Customer` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `address` TEXT NOT NULL, `birthday` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Flight` (`flight_id` INTEGER NOT NULL, `departureCity` TEXT NOT NULL, `destinationCity` TEXT NOT NULL, `departureTime` TEXT NOT NULL, `arrivalTime` TEXT NOT NULL, PRIMARY KEY (`flight_id`))');
+            'CREATE TABLE IF NOT EXISTS `flights` (`id` INTEGER, `departureCity` TEXT NOT NULL, `destinationCity` TEXT NOT NULL, `departureTime` TEXT NOT NULL, `arrivalTime` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Reservation` (`reservation_id` INTEGER NOT NULL, `customerId` INTEGER NOT NULL, `flight_Id` INTEGER NOT NULL, `reservationDate` TEXT NOT NULL, PRIMARY KEY (`reservation_id`))');
 
@@ -325,42 +325,39 @@ class _$FlightDao extends FlightDao {
   _$FlightDao(
     this.database,
     this.changeListener,
-  )   : _queryAdapter = QueryAdapter(database, changeListener),
+  )   : _queryAdapter = QueryAdapter(database),
         _flightInsertionAdapter = InsertionAdapter(
             database,
-            'Flight',
+            'flights',
             (Flight item) => <String, Object?>{
-                  'flight_id': item.flight_id,
+                  'id': item.id,
                   'departureCity': item.departureCity,
                   'destinationCity': item.destinationCity,
                   'departureTime': item.departureTime,
                   'arrivalTime': item.arrivalTime
-                },
-            changeListener),
+                }),
         _flightUpdateAdapter = UpdateAdapter(
             database,
-            'Flight',
-            ['flight_id'],
+            'flights',
+            ['id'],
             (Flight item) => <String, Object?>{
-                  'flight_id': item.flight_id,
+                  'id': item.id,
                   'departureCity': item.departureCity,
                   'destinationCity': item.destinationCity,
                   'departureTime': item.departureTime,
                   'arrivalTime': item.arrivalTime
-                },
-            changeListener),
+                }),
         _flightDeletionAdapter = DeletionAdapter(
             database,
-            'Flight',
-            ['flight_id'],
+            'flights',
+            ['id'],
             (Flight item) => <String, Object?>{
-                  'flight_id': item.flight_id,
+                  'id': item.id,
                   'departureCity': item.departureCity,
                   'destinationCity': item.destinationCity,
                   'departureTime': item.departureTime,
                   'arrivalTime': item.arrivalTime
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -375,29 +372,26 @@ class _$FlightDao extends FlightDao {
   final DeletionAdapter<Flight> _flightDeletionAdapter;
 
   @override
-  Future<List<Flight>> findAllFlights() async {
-    return _queryAdapter.queryList('SELECT * FROM Flight',
+  Future<List<Flight>> getAllFlights() async {
+    return _queryAdapter.queryList('SELECT * FROM flights',
         mapper: (Map<String, Object?> row) => Flight(
-            row['flight_id'] as int,
-            row['departureCity'] as String,
-            row['destinationCity'] as String,
-            row['departureTime'] as String,
-            row['arrivalTime'] as String));
+            id: row['id'] as int?,
+            departureCity: row['departureCity'] as String,
+            destinationCity: row['destinationCity'] as String,
+            departureTime: row['departureTime'] as String,
+            arrivalTime: row['arrivalTime'] as String));
   }
 
   @override
-  Stream<Flight?> findFlightById(int id) {
-    return _queryAdapter.queryStream(
-        'SELECT * FROM Flight WHERE flight_id = ?1',
+  Future<Flight?> findFlightById(int id) async {
+    return _queryAdapter.query('SELECT * FROM flights WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Flight(
-            row['flight_id'] as int,
-            row['departureCity'] as String,
-            row['destinationCity'] as String,
-            row['departureTime'] as String,
-            row['arrivalTime'] as String),
-        arguments: [id],
-        queryableName: 'Flight',
-        isView: false);
+            id: row['id'] as int?,
+            departureCity: row['departureCity'] as String,
+            destinationCity: row['destinationCity'] as String,
+            departureTime: row['departureTime'] as String,
+            arrivalTime: row['arrivalTime'] as String),
+        arguments: [id]);
   }
 
   @override

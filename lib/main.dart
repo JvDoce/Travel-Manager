@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:travelmanager/reservation/ReservationPage.dart';
-import 'package:travelmanager/reservation/reservation.dart';
-import 'airplane/airplane.dart';
 import 'airplane/airplane_dao.dart';
 import 'airplane/airplane_list_page.dart';
-import 'customer/customer.dart';
 import 'customer/customer_list_page.dart'; // Adjust the import based on your project structure
-//import '../airplane/flight_list_page.dart'; // Adjust the import based on your project structure
-//import '../flight/flight_list_page.dart'; // Adjust the import based on your project structure
+//import '../airplane/airplane_list_page.dart'; // Adjust the import based on your project structure
+import '../flights/flight_list_page.dart'; // Adjust the import based on your project structure
 //import '../reservation/reservation_list_page.dart'; // Adjust the import based on your project structure
 import 'app_database.dart'; // Adjust the import based on your project structure
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'flights/flight.dart';
-import 'flights/flight_list_page.dart';
 
 
 void main() async {
@@ -29,8 +22,7 @@ class MyApp extends StatelessWidget {
   final AppDatabase database;
   final SharedPreferences sharedPreferences;
 
-
-  MyApp(this.database, this.sharedPreferences,);
+  MyApp(this.database, this.sharedPreferences);
 
   @override
   Widget build(BuildContext context) {
@@ -51,25 +43,19 @@ class MyApp extends StatelessWidget {
           airplaneDao: database.airplaneDao,  // Ensure you have airplaneDao in your AppDatabase
           sharedPreferences: sharedPreferences,
         ),
- //       '/flightList': (context) => FlightListPage(
- //         flightDao: database.flightDao, // Ensure you have flightDao in your AppDatabase
-//          sharedPreferences: sharedPreferences,
- //       ),
+        '/flightList': (context) => FlightListPage(
+          flightDao: database.flightDao, // Ensure you have flightDao in your AppDatabase
+          sharedPreferences: sharedPreferences,
+        ),
 //        '/reservationList': (context) => ReservationListPage(
  //         sharedPreferences: sharedPreferences,
  //       ),
-        '/flightList': (context) => FlightListPage(
-          flightDao: database.flightDao,  // Ensure you have airplaneDao in your AppDatabase
-          sharedPreferences: sharedPreferences,
-        ),
-        '/reservationList': (context) => ReservationPage(),
       },
     );
   }
 }
 
 class HomePage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -24,6 +24,16 @@ class _FlightAddPageState extends State<FlightAddPage> {
   final _arrivalTimeControl = TextEditingController();
 
   @override
+  void dispose() {
+    // Dispose controllers to avoid memory leaks
+    _departureCityControl.dispose();
+    _destinationCityControl.dispose();
+    _departureTimeControl.dispose();
+    _arrivalTimeControl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +68,7 @@ class _FlightAddPageState extends State<FlightAddPage> {
               TextFormField(
                 controller: _departureTimeControl,
                 decoration: InputDecoration(labelText: 'Departure Time'),
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.datetime, // Changed to datetime for better user input
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter departure time';
@@ -69,7 +79,7 @@ class _FlightAddPageState extends State<FlightAddPage> {
               TextFormField(
                 controller: _arrivalTimeControl,
                 decoration: InputDecoration(labelText: 'Arrival Time'),
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.datetime, // Changed to datetime for better user input
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter arrival time';
@@ -80,18 +90,16 @@ class _FlightAddPageState extends State<FlightAddPage> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    final newAirplane = Flight(
-                      Flight.ID++, // ID will be auto-generated
-                      _departureCityControl.text,
-                      _destinationCityControl.text,
-                        _departureTimeControl.text,
-                        _departureTimeControl.text
+                    Flight newFlight = Flight(
+                      id: null,
+                      departureCity: _departureCityControl.text,
+                      destinationCity: _destinationCityControl.text,
+                      departureTime: _departureTimeControl.text,
+                      arrivalTime: _arrivalTimeControl.text,
                     );
-                    widget.onAdd(newAirplane);
+                    widget.onAdd(newFlight);
                     Navigator.of(context).pop();
-                  }
-                },
+                  },
                 child: Text('Submit'),
               ),
             ],
