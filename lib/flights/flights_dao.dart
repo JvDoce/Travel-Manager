@@ -3,11 +3,11 @@ import 'flight.dart';
 
 @dao
 abstract class FlightDao {
-  @Query('SELECT * FROM Flight')
-  Future<List<Flight>> findAllFlights();
+  @Query('SELECT * FROM flights')
+  Future<List<Flight>> getAllFlights();
 
-  @Query('SELECT * FROM Flight WHERE flight_id = :id')
-  Stream<Flight?> findFlightById(int id);
+  @Query('SELECT * FROM flights WHERE id = :id')
+  Future<Flight?> findFlightById(int id);
 
   @insert
   Future<void> insertFlight(Flight flight);

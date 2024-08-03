@@ -25,7 +25,7 @@ class _FlightListPageState extends State<FlightListPage> {
   @override
   void initState() {
     super.initState();
-    flightFuture = widget.flightDao.findAllFlights();
+    flightFuture = widget.flightDao.getAllFlights();
   }
 
   void navigateToAddFlightPage() {
@@ -93,14 +93,14 @@ class _FlightListPageState extends State<FlightListPage> {
   void _addFlight(Flight flight) async {
     await widget.flightDao.insertFlight(flight);
     setState(() {
-      flightFuture = widget.flightDao.findAllFlights();
+      flightFuture = widget.flightDao.getAllFlights();
     });
   }
 
   void onUpdateFlight(Flight flight) async {
     await widget.flightDao.updateFlight(flight);
     setState(() {
-      flightFuture = widget.flightDao.findAllFlights();
+      flightFuture = widget.flightDao.getAllFlights();
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Flight updated successfully')),
@@ -110,7 +110,7 @@ class _FlightListPageState extends State<FlightListPage> {
   void onDeleteFlight(Flight flight) async {
     await widget.flightDao.deleteFlight(flight);
     setState(() {
-      flightFuture = widget.flightDao.findAllFlights();
+      flightFuture = widget.flightDao.getAllFlights();
     });
     Navigator.of(context).pop(); // Pop the detail page after deletion
     ScaffoldMessenger.of(context).showSnackBar(
