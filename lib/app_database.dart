@@ -6,7 +6,7 @@ import 'airplane/airplane_dao.dart';
 import 'airplane/airplane.dart';
 import 'customer/customer_dao.dart';
 import 'customer/customer.dart';
-import 'flights/flights_dao.dart';
+import 'flights/flight_dao.dart';
 import 'flights/flight.dart';
 import 'reservation/reservation_dao.dart';
 import 'reservation/reservation.dart';

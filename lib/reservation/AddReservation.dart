@@ -9,7 +9,7 @@ import '../airplane/airplane_dao.dart';
 import '../customer/customer.dart';
 import '../customer/customer_dao.dart';
 import '../flights/flight.dart';
-import '../flights/flights_dao.dart';
+import '../flights/flight_dao.dart';
 import 'BookList.dart';
 
 class AddReservation extends StatefulWidget {
@@ -62,7 +62,7 @@ class _AddReservationState extends State<AddReservation> {
 
   Future<void> _fetchData() async {
     final customers = await _customerDao.getAllCustomers();
-    final flights = await _flightDao.findAllFlights();
+    final flights = await _flightDao.getAllFlights();
     final airplanes = await _airplaneDao.getAllAirplanes();
 
     setState(() {
@@ -128,7 +128,7 @@ class _AddReservationState extends State<AddReservation> {
                               selectedFlight = newFlight;
                             });
                           },
-                          itemText: (Flight flight) => 'Flight ${flight.flight_id}: ${flight.departureCity} to ${flight.destinationCity}',
+                          itemText: (Flight flight) => 'Flight ${flight.id}: ${flight.departureCity} to ${flight.destinationCity}',
                         )
                         ),
                         Expanded(child: DropdownButton<String>(
@@ -158,7 +158,7 @@ class _AddReservationState extends State<AddReservation> {
                               final reservation = Reservation(
                                 Reservation.ID++,
                                 selectedCustomer!.id as int,
-                                selectedFlight!.flight_id,
+                                selectedFlight!.id as int,
                                 resDate!,
                               );
                               showDialog<String>(
@@ -236,7 +236,7 @@ class _AddReservationState extends State<AddReservation> {
                         selectedFlight = newFlight;
                       });
                     },
-                    itemText: (Flight flight) => 'Flight ${flight.flight_id}: ${flight.departureCity} to ${flight.destinationCity}',
+                    itemText: (Flight flight) => 'Flight ${flight.id}: ${flight.departureCity} to ${flight.destinationCity}',
                   ),
                   _buildDropdown<Airplane>(
                     label: 'Select Airplane',
@@ -273,7 +273,7 @@ class _AddReservationState extends State<AddReservation> {
                             final reservation = Reservation(
                               Reservation.ID++,
                               selectedCustomer!.id as int,
-                              selectedFlight!.flight_id,
+                              selectedFlight!.id as int,
                               resDate!,
                             );
                             showDialog<String>(

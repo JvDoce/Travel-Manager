@@ -90,13 +90,11 @@ class _FlightAddPageState extends State<FlightAddPage> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                    Flight newFlight = Flight(
-                      id: null,
-                      departureCity: _departureCityControl.text,
-                      destinationCity: _destinationCityControl.text,
-                      departureTime: _departureTimeControl.text,
-                      arrivalTime: _arrivalTimeControl.text,
-                    );
+                    Flight newFlight = Flight(null,
+                        _departureCityControl.text,
+                        _destinationCityControl.text,
+                        _departureTimeControl.text,
+                        _arrivalTimeControl.text);
                     widget.onAdd(newFlight);
                     Navigator.of(context).pop();
                   },
