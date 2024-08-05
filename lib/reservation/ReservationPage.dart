@@ -57,16 +57,6 @@ class _MyHomePageState extends State<ReservationPage> {
       return Scaffold(
         appBar: AppBar(
           title: const Text('Reservation Page'),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()), // Replace HomePage with your actual homepage widget
-                    (Route<dynamic> route) => false,
-              );
-            },
-          ),
         ),
         body: Row(
           children: [
@@ -76,7 +66,10 @@ class _MyHomePageState extends State<ReservationPage> {
             ),
             Expanded(
               flex: 1,
-              child: TabletDetail(_selectedReservation, _selectedCustomerID, _selectedFlightID), // Initialize with null for now
+              child: TabletDetail(
+                  _selectedReservation,
+                  _selectedCustomerID,
+                  _selectedFlightID), // Initialize with null for now
             )
           ],
         ),
