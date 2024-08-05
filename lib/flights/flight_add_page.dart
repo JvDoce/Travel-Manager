@@ -43,53 +43,54 @@ class _FlightAddPageState extends State<FlightAddPage> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _departureCityControl,
-                decoration: InputDecoration(labelText: 'Departure: City Name'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a city name';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _destinationCityControl,
-                decoration: InputDecoration(labelText: 'Destination: City Name'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a city name';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _departureTimeControl,
-                decoration: InputDecoration(labelText: 'Departure Time'),
-                keyboardType: TextInputType.datetime, // Changed to datetime for better user input
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter departure time';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _arrivalTimeControl,
-                decoration: InputDecoration(labelText: 'Arrival Time'),
-                keyboardType: TextInputType.datetime, // Changed to datetime for better user input
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter arrival time';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _departureCityControl,
+                  decoration: InputDecoration(labelText: 'Departure: City Name'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a city name';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _destinationCityControl,
+                  decoration: InputDecoration(labelText: 'Destination: City Name'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a city name';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _departureTimeControl,
+                  decoration: InputDecoration(labelText: 'Departure Time'),
+                  keyboardType: TextInputType.datetime, // Changed to datetime for better user input
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter departure time';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _arrivalTimeControl,
+                  decoration: InputDecoration(labelText: 'Arrival Time'),
+                  keyboardType: TextInputType.datetime, // Changed to datetime for better user input
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter arrival time';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
                     Flight newFlight = Flight(null,
                         _departureCityControl.text,
                         _destinationCityControl.text,
@@ -98,9 +99,10 @@ class _FlightAddPageState extends State<FlightAddPage> {
                     widget.onAdd(newFlight);
                     Navigator.of(context).pop();
                   },
-                child: Text('Submit'),
-              ),
-            ],
+                  child: Text('Submit'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

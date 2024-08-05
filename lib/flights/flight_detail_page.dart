@@ -51,95 +51,195 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Flight Details'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              // Input field for departure city
-              TextFormField(
-                controller: _departureCityController,
-                decoration: InputDecoration(labelText: 'Departure City'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter departure city';
-                  }
-                  return null;
-                },
-              ),
-              // Input field for destination city
-              TextFormField(
-                controller: _destinationCityController,
-                decoration: InputDecoration(labelText: 'Destination City'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter destination city';
-                  }
-                  return null;
-                },
-              ),
-              // Input field for departure time
-              TextFormField(
-                controller: _departureTimeController,
-                decoration: InputDecoration(labelText: 'Departure Time'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter departure time';
-                  }
-                  return null;
-                },
-              ),
-              // Input field for arrival time
-              TextFormField(
-                controller: _arrivalTimeController,
-                decoration: InputDecoration(labelText: 'Arrival Time'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter arrival time';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    var size = MediaQuery.of(context).size;
+    var width = size.width;
+    var height = size.height;
+
+    if ((width > height) && (width > 720)){
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Flight Details'),
+          automaticallyImplyLeading: false,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
                 children: [
-                  // Button to update flight details
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        final updatedFlight = Flight(
-                          widget.flight.id,
-                          _departureCityController.text,
-                          _destinationCityController.text,
-                          _departureTimeController.text,
-                          _arrivalTimeController.text,
-                        );
-                        widget.onUpdate(updatedFlight);
-                        Navigator.of(context).pop();
+                  // Input field for departure city
+                  TextFormField(
+                    controller: _departureCityController,
+                    decoration: InputDecoration(labelText: 'Departure City'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter departure city';
                       }
+                      return null;
                     },
-                    child: Text('Update'),
                   ),
-                  // Button to delete the flight
-                  ElevatedButton(
-                    onPressed: () {
-                      widget.onDelete(widget.flight);
-                      Navigator.of(context).pop();
+                  // Input field for destination city
+                  TextFormField(
+                    controller: _destinationCityController,
+                    decoration: InputDecoration(labelText: 'Destination City'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter destination city';
+                      }
+                      return null;
                     },
-                    child: Text('Delete'),
+                  ),
+                  // Input field for departure time
+                  TextFormField(
+                    controller: _departureTimeController,
+                    decoration: InputDecoration(labelText: 'Departure Time'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter departure time';
+                      }
+                      return null;
+                    },
+                  ),
+                  // Input field for arrival time
+                  TextFormField(
+                    controller: _arrivalTimeController,
+                    decoration: InputDecoration(labelText: 'Arrival Time'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter arrival time';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // Button to update flight details
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            final updatedFlight = Flight(
+                              widget.flight.id,
+                              _departureCityController.text,
+                              _destinationCityController.text,
+                              _departureTimeController.text,
+                              _arrivalTimeController.text,
+                            );
+                            widget.onUpdate(updatedFlight);
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text('Update'),
+                      ),
+                      // Button to delete the flight
+                      ElevatedButton(
+                        onPressed: () {
+                          widget.onDelete(widget.flight);
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Delete'),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    }else{
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Flight Details'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                // Input field for departure city
+                TextFormField(
+                  controller: _departureCityController,
+                  decoration: InputDecoration(labelText: 'Departure City'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter departure city';
+                    }
+                    return null;
+                  },
+                ),
+                // Input field for destination city
+                TextFormField(
+                  controller: _destinationCityController,
+                  decoration: InputDecoration(labelText: 'Destination City'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter destination city';
+                    }
+                    return null;
+                  },
+                ),
+                // Input field for departure time
+                TextFormField(
+                  controller: _departureTimeController,
+                  decoration: InputDecoration(labelText: 'Departure Time'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter departure time';
+                    }
+                    return null;
+                  },
+                ),
+                // Input field for arrival time
+                TextFormField(
+                  controller: _arrivalTimeController,
+                  decoration: InputDecoration(labelText: 'Arrival Time'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter arrival time';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // Button to update flight details
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          final updatedFlight = Flight(
+                            widget.flight.id,
+                            _departureCityController.text,
+                            _destinationCityController.text,
+                            _departureTimeController.text,
+                            _arrivalTimeController.text,
+                          );
+                          widget.onUpdate(updatedFlight);
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: Text('Update'),
+                    ),
+                    // Button to delete the flight
+                    ElevatedButton(
+                      onPressed: () {
+                        widget.onDelete(widget.flight);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Delete'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
   }
 }

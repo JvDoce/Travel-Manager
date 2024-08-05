@@ -22,6 +22,11 @@ class FlightListPage extends StatefulWidget {
 class _FlightListPageState extends State<FlightListPage> {
   late Future<List<Flight>> flightFuture;
 
+  Flight? selectedFlight;
+  late Function(Flight) selectedUpdate;
+  late Function(Flight) selectedDelete;
+  late SharedPreferences selectedPrefs;
+
   @override
   void initState() {
     super.initState();
@@ -43,51 +48,80 @@ class _FlightListPageState extends State<FlightListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Flight List'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: navigateToAddFlightPage,
-        tooltip: 'Add Airplane',
-        child: Icon(Icons.add),
-      ),
-      body: FutureBuilder<List<Flight>>(
-        future: flightFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No flight found.'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                Flight flight = snapshot.data![index];
-                return ListTile(
-                  title: Text('Departure: ${flight.departureCity} Destination: ${flight.destinationCity}'),
-                  subtitle: Text('Departure Time: ${flight.departureTime} Destination Time: ${flight.arrivalTime}'),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => FlightDetailPage(
-                          flight: flight,
-                          onUpdate: onUpdateFlight,
-                          onDelete: onDeleteFlight,
-                          sharedPreferences: widget.sharedPreferences,
+    var size = MediaQuery.of(context).size;
+    var width = size.width;
+    var height = size.height;
+
+    if ((width > height) && (width > 720)){
+      return Scaffold(
+          appBar: AppBar(
+          title: Text('Flight List'),
+          ),
+        body: Row(
+          children: [
+            Expanded(
+                flex: 1,
+                child: TabletListView()
+            ),
+            Expanded(
+                flex: 1,
+                child: selectedFlight != null
+                    ? TabletDetailView(selectedFlight!,
+                    selectedUpdate,
+                    selectedDelete,
+                    selectedPrefs
+                ) : Center( child: Text('Select a Flight'),)
+            ),
+          ],
+        ),
+      );
+    }else {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Flight List'),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: navigateToAddFlightPage,
+          tooltip: 'Add Airplane',
+          child: Icon(Icons.add),
+        ),
+        body: FutureBuilder<List<Flight>>(
+          future: flightFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No flight found.'));
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  Flight flight = snapshot.data![index];
+                  return ListTile(
+                    title: Text('Departure: ${flight.departureCity} Destination: ${flight.destinationCity}'),
+                    subtitle: Text('Departure Time: ${flight.departureTime} Destination Time: ${flight.arrivalTime}'),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => FlightDetailPage(
+                            flight: flight,
+                            onUpdate: onUpdateFlight,
+                            onDelete: onDeleteFlight,
+                            sharedPreferences: widget.sharedPreferences,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          }
-        },
-      ),
-    );
+                      );
+                    },
+                  );
+                },
+              );
+            }
+          },
+        ),
+      );
+    }
   }
 
   void _addFlight(Flight flight) async {
@@ -116,5 +150,53 @@ class _FlightListPageState extends State<FlightListPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Flight deleted successfully')),
     );
+  }
+
+  Widget TabletListView() {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: navigateToAddFlightPage,
+        tooltip: 'Add Airplane',
+        child: Icon(Icons.add),
+      ),
+      body: FutureBuilder<List<Flight>>(
+        future: flightFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No flight found.'));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                Flight flight = snapshot.data![index];
+                return ListTile(
+                  title: Text('Departure: ${flight.departureCity} Destination: ${flight.destinationCity}'),
+                  subtitle: Text('Departure Time: ${flight.departureTime} Destination Time: ${flight.arrivalTime}'),
+                  onTap: () {
+                    setState(() {
+                      selectedFlight = flight;
+                      selectedUpdate = onUpdateFlight;
+                      selectedDelete = onDeleteFlight;
+                      selectedPrefs = widget.sharedPreferences;
+                    });
+                  },
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget TabletDetailView(Flight selectedAirplane, Function(Flight) selectedUpdate, Function(Flight) selectedDelete, SharedPreferences prefs) {
+    return FlightDetailPage(flight: selectedAirplane,
+        onUpdate: selectedUpdate,
+        onDelete: selectedDelete,
+        sharedPreferences: prefs);
   }
 }
