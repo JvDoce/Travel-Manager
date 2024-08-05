@@ -1,189 +1,120 @@
 import 'package:flutter/material.dart';
+import 'package:travelmanager/flights/flights_dao.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'flight.dart';
-import 'flights_dao.dart';
+import 'flights_add_page.dart';
+import 'flights_detail_page.dart'; // Ensure this import is included
 
-// FlightsPage displays a list of flights and allows users to add, update, or delete them
-class FlightsPage extends StatefulWidget {
+class FlightListPage extends StatefulWidget {
+  final FlightDao flightDao;
+  final SharedPreferences sharedPreferences;
+
+  const FlightListPage({
+    required this.flightDao,
+    required this.sharedPreferences,
+    Key? key,
+  }) : super(key: key);
+
   @override
-  _FlightsPageState createState() => _FlightsPageState();
+  _FlightListPageState createState() => _FlightListPageState();
 }
 
-class _FlightsPageState extends State<FlightsPage> {
-  // DAO instance for interacting with the flight database
-  late FlightDao flightDao;
-  // List to hold the flights fetched from the database
-  List<Flight> _flights = [];
+class _FlightListPageState extends State<FlightListPage> {
+  late Future<List<Flight>> flightFuture;
 
   @override
   void initState() {
     super.initState();
-    flightDao = FlightDao.instance;
-    _refreshFlights(); // Fetch flights when the page is initialized
+    flightFuture = widget.flightDao.getAllFlights();
   }
 
-  // Refresh the list of flights from the database
-  void _refreshFlights() async {
-    final data = await flightDao.getFlights();
-    setState(() {
-      _flights = data; // Update the state with the fetched flights
-    });
-  }
-
-  // Add a new flight to the database
-  void _addFlight(String departure, String destination, String departureTime, String arrivalTime) async {
-    await flightDao.insertFlight(Flight(
-      departureCity: departure,
-      destinationCity: destination,
-      departureTime: departureTime,
-      arrivalTime: arrivalTime,
-    ));
-    _refreshFlights(); // Refresh the flight list after adding
-  }
-
-  // Update an existing flight in the database
-  void _updateFlight(Flight flight) async {
-    await flightDao.updateFlight(flight);
-    _refreshFlights(); // Refresh the flight list after updating
-  }
-
-  // Delete a flight from the database
-  void _deleteFlight(int id) async {
-    await flightDao.deleteFlight(id);
-    _refreshFlights(); // Refresh the flight list after deletion
+  void navigateToAddFlightPage() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FlightAddPage(
+          onAdd: (flight) {
+            _addFlight(flight);
+          },
+          sharedPreferences: widget.sharedPreferences,
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flights'),
-        actions: [
-          // Info button to show instructions on using the page
-          IconButton(
-            icon: Icon(Icons.info),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('Instructions'),
-                  content: Text('This page allows you to add, view, update, and delete flights.'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('OK'),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
+        title: Text('Airplane List'),
       ),
-      body: Column(
-        children: [
-          // ListView to display the list of flights
-          Expanded(
-            child: ListView.builder(
-              itemCount: _flights.length,
+      floatingActionButton: FloatingActionButton(
+        onPressed: navigateToAddFlightPage,
+        tooltip: 'Add Flight',
+        child: Icon(Icons.add),
+      ),
+      body: FutureBuilder<List<Flight>>(
+        future: flightFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No Flight found.'));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                final flight = _flights[index];
+                Flight flight = snapshot.data![index];
                 return ListTile(
-                  title: Text('${flight.departureCity} to ${flight.destinationCity}'),
-                  subtitle: Text('Departure: ${flight.departureTime}, Arrival: ${flight.arrivalTime}'),
+                  title: Text('Departure: ${flight.departureCity} Destination: ${flight.destinationCity}'),
+                  subtitle: Text('Departure Time: ${flight.departureTime} Destination Time: ${flight.arrivalTime}'),
                   onTap: () {
-                    _showFlightDialog(flight: flight); // Show dialog for updating flight details
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => FlightDetailPage(
+                          flight: flight,
+                          onUpdate: onUpdateFlight,
+                          onDelete: onDeleteFlight,
+                          sharedPreferences: widget.sharedPreferences,
+                        ),
+                      ),
+                    );
                   },
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      _deleteFlight(flight.id!); // Delete the flight
-                    },
-                  ),
                 );
               },
-            ),
-          ),
-          // Button to show dialog for adding a new flight
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              child: Text('Add Flight'),
-              onPressed: () {
-                _showFlightDialog(); // Show dialog for adding a new flight
-              },
-            ),
-          ),
-        ],
+            );
+          }
+        },
       ),
     );
   }
 
-  // Show a dialog for adding or updating flight details
-  void _showFlightDialog({Flight? flight}) {
-    final _departureController = TextEditingController(text: flight?.departureCity);
-    final _destinationController = TextEditingController(text: flight?.destinationCity);
-    final _departureTimeController = TextEditingController(text: flight?.departureTime);
-    final _arrivalTimeController = TextEditingController(text: flight?.arrivalTime);
+  void _addFlight(Flight flight) async {
+    await widget.flightDao..insertFlight(flight);
+    setState(() {
+      flightFuture = widget.flightDao.getAllFlights();
+    });
+  }
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(flight == null ? 'Add Flight' : 'Update Flight'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Input fields for flight details
-            TextField(
-              controller: _departureController,
-              decoration: InputDecoration(labelText: 'Departure City'),
-            ),
-            TextField(
-              controller: _destinationController,
-              decoration: InputDecoration(labelText: 'Destination City'),
-            ),
-            TextField(
-              controller: _departureTimeController,
-              decoration: InputDecoration(labelText: 'Departure Time'),
-            ),
-            TextField(
-              controller: _arrivalTimeController,
-              decoration: InputDecoration(labelText: 'Arrival Time'),
-            ),
-          ],
-        ),
-        actions: [
-          // Cancel button to close the dialog
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
-          ),
-          // Save button to either add or update a flight
-          TextButton(
-            onPressed: () {
-              if (flight == null) {
-                // Add new flight if no flight object is provided
-                _addFlight(
-                  _departureController.text,
-                  _destinationController.text,
-                  _departureTimeController.text,
-                  _arrivalTimeController.text,
-                );
-              } else {
-                // Update existing flight if a flight object is provided
-                _updateFlight(Flight(
-                  id: flight.id,
-                  departureCity: _departureController.text,
-                  destinationCity: _destinationController.text,
-                  departureTime: _departureTimeController.text,
-                  arrivalTime: _arrivalTimeController.text,
-                ));
-              }
-              Navigator.pop(context); // Close the dialog
-            },
-            child: Text('Save'),
-          ),
-        ],
-      ),
+  void onUpdateFlight(Flight flight) async {
+    await widget.flightDao.updateFlight(flight);
+    setState(() {
+      flightFuture = widget.flightDao.getAllFlights();
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Flight updated successfully')),
+    );
+  }
+
+  void onDeleteFlight(Flight flight) async {
+    await widget.flightDao.deleteFlight(flight);
+    setState(() {
+      flightFuture = widget.flightDao.getAllFlights();
+    });
+    Navigator.of(context).pop(); // Pop the detail page after deletion
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Flight deleted successfully')),
     );
   }
 }

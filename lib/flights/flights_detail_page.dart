@@ -115,11 +115,11 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                       // Validate form and update flight details
                       if (_formKey.currentState!.validate()) {
                         final updatedFlight = Flight(
-                          id: widget.flight.id,
-                          departureCity: _departureCityController.text,
-                          destinationCity: _destinationCityController.text,
-                          departureTime: _departureTimeController.text,
-                          arrivalTime: _arrivalTimeController.text,
+                          widget.flight.id,
+                          _departureCityController.text,
+                          _destinationCityController.text,
+                          _departureTimeController.text,
+                          _arrivalTimeController.text,
                         );
                         widget.onUpdate(updatedFlight);
                         Navigator.of(context).pop();

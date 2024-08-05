@@ -104,11 +104,11 @@ class _FlightAddPageState extends State<FlightAddPage> {
                   if (_formKey.currentState!.validate()) {
                     // Create a new flight object with the form data
                     final newFlight = Flight(
-                      id: null, // ID will be auto-generated
-                      departureCity: _departureCityController.text,
-                      destinationCity: _destinationCityController.text,
-                      departureTime: _departureTimeController.text,
-                      arrivalTime: _arrivalTimeController.text,
+                      null, // ID will be auto-generated
+                      _departureCityController.text,
+                      _destinationCityController.text,
+                      _departureTimeController.text,
+                      _arrivalTimeController.text,
                     );
                     // Call the onAdd callback with the new flight
                     widget.onAdd(newFlight);
