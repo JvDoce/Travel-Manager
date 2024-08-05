@@ -191,6 +191,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
       )
     );
   }
+
   Widget TabletDetailView(Customer selectedCustomer, Function(Customer) selectedUpdate, Function(Customer) selectedDelete, SharedPreferences prefs) {
     return SingleChildScrollView(
       child: Column(

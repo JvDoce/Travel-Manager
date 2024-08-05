@@ -22,6 +22,11 @@ class AirplaneListPage extends StatefulWidget {
 class _AirplaneListPageState extends State<AirplaneListPage> {
   late Future<List<Airplane>> airplaneFuture;
 
+  Airplane? selectedAirplane;
+  late Function(Airplane) selectedUpdate;
+  late Function(Airplane) selectedDelete;
+  late SharedPreferences selectedPrefs;
+
   @override
   void initState() {
     super.initState();
@@ -43,51 +48,80 @@ class _AirplaneListPageState extends State<AirplaneListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Airplane List'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: navigateToAddAirplanePage,
-        tooltip: 'Add Airplane',
-        child: Icon(Icons.add),
-      ),
-      body: FutureBuilder<List<Airplane>>(
-        future: airplaneFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No airplane found.'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                Airplane airplane = snapshot.data![index];
-                return ListTile(
-                  title: Text('${airplane.type} ${airplane.passengers}'),
-                  subtitle: Text('Max Speed: ${airplane.maxSpeed} km/h\nRange: ${airplane.range} km'),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => AirplaneDetailPage(
-                          airplane: airplane,
-                          onUpdate: onUpdateAirplane,
-                          onDelete: onDeleteAirplane,
-                          sharedPreferences: widget.sharedPreferences,
+    var size = MediaQuery.of(context).size;
+    var width = size.width;
+    var height = size.height;
+
+    if ((width > height) && (width > 720)){
+      return Scaffold(
+          appBar: AppBar(
+            title: Text('Airplane List'),
+          ),
+          body: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                  child: TabletListView()
+              ),
+              Expanded(
+                  flex: 1,
+                  child: selectedAirplane != null
+                  ? TabletDetailView(selectedAirplane!,
+                          selectedUpdate,
+                          selectedDelete,
+                          selectedPrefs
+                  ) : Center( child: Text('Select an Airplane'),)
+              ),
+            ],
+          ),
+      );
+    }else {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Airplane List'),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: navigateToAddAirplanePage,
+          tooltip: 'Add Airplane',
+          child: Icon(Icons.add),
+        ),
+        body: FutureBuilder<List<Airplane>>(
+          future: airplaneFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No airplane found.'));
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  Airplane airplane = snapshot.data![index];
+                  return ListTile(
+                    title: Text('${airplane.type} ${airplane.passengers}'),
+                    subtitle: Text('Max Speed: ${airplane.maxSpeed} km/h\nRange: ${airplane.range} km'),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => AirplaneDetailPage(
+                            airplane: airplane,
+                            onUpdate: onUpdateAirplane,
+                            onDelete: onDeleteAirplane,
+                            sharedPreferences: widget.sharedPreferences,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          }
-        },
-      ),
-    );
+                      );
+                    },
+                  );
+                },
+              );
+            }
+          },
+        ),
+      );
+    }
   }
 
   void _addAirplane(Airplane airplane) async {
@@ -117,4 +151,53 @@ class _AirplaneListPageState extends State<AirplaneListPage> {
       SnackBar(content: Text('Airplane deleted successfully')),
     );
   }
+
+  Widget TabletListView() {
+    return Scaffold(
+        floatingActionButton: FloatingActionButton(
+        onPressed: navigateToAddAirplanePage,
+        tooltip: 'Add Airplane',
+        child: Icon(Icons.add),
+        ),
+      body: FutureBuilder<List<Airplane>>(
+        future: airplaneFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No airplane found.'));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                Airplane airplane = snapshot.data![index];
+                return ListTile(
+                  title: Text('${airplane.type} ${airplane.passengers}'),
+                  subtitle: Text('Max Speed: ${airplane.maxSpeed} km/h\nRange: ${airplane.range} km'),
+                  onTap: () {
+                    setState(() {
+                      selectedAirplane = airplane;
+                      selectedUpdate = onUpdateAirplane;
+                      selectedDelete = onDeleteAirplane;
+                      selectedPrefs = widget.sharedPreferences;
+                    });
+                  },
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+  Widget TabletDetailView(Airplane selectedAirplane, Function(Airplane) selectedUpdate, Function(Airplane) selectedDelete, SharedPreferences prefs) {
+    return AirplaneDetailPage(airplane: selectedAirplane,
+      onUpdate: selectedUpdate,
+      onDelete: selectedDelete,
+      sharedPreferences: prefs,
+    );
+  }
+
 }

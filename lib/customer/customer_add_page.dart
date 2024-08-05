@@ -48,45 +48,47 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _firstNameController,
-              decoration: InputDecoration(labelText: 'First Name'),
-            ),
-            TextField(
-              controller: _lastNameController,
-              decoration: InputDecoration(labelText: 'Last Name'),
-            ),
-            TextField(
-              controller: _addressController,
-              decoration: InputDecoration(labelText: 'Address'),
-            ),
-            TextField(
-              controller: _birthdayController,
-              decoration: InputDecoration(labelText: 'Birthday'),
-            ),
-            SizedBox(height: 16.0),
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Customer newCustomer = Customer(
-                      null, // Passing null for id since it will be auto-generated
-                      _firstNameController.text,
-                      _lastNameController.text,
-                      _addressController.text,
-                      _birthdayController.text,
-                    );
-                    widget.onAdd(newCustomer);
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Add'),
-                ),
-              ],
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _firstNameController,
+                decoration: InputDecoration(labelText: 'First Name'),
+              ),
+              TextField(
+                controller: _lastNameController,
+                decoration: InputDecoration(labelText: 'Last Name'),
+              ),
+              TextField(
+                controller: _addressController,
+                decoration: InputDecoration(labelText: 'Address'),
+              ),
+              TextField(
+                controller: _birthdayController,
+                decoration: InputDecoration(labelText: 'Birthday'),
+              ),
+              SizedBox(height: 16.0),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Customer newCustomer = Customer(
+                        null, // Passing null for id since it will be auto-generated
+                        _firstNameController.text,
+                        _lastNameController.text,
+                        _addressController.text,
+                        _birthdayController.text,
+                      );
+                      widget.onAdd(newCustomer);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Add'),
+                  ),
+                ],
+              ),
+            ],
+          )
         ),
       ),
     );

@@ -48,51 +48,51 @@ class _UpdateCustomerPageState extends State<UpdateCustomerPage> {
       appBar: AppBar(
         title: Text('Update Customer'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
+      body: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                controller: _firstNameController,
-                decoration: InputDecoration(labelText: 'First Name'),
-              ),
-              TextField(
-                controller: _lastNameController,
-                decoration: InputDecoration(labelText: 'Last Name'),
-              ),
-              TextField(
-                controller: _addressController,
-                decoration: InputDecoration(labelText: 'Address'),
-              ),
-              TextField(
-                controller: _birthdayController,
-                decoration: InputDecoration(labelText: 'Birthday'),
-              ),
-              SizedBox(height: 16.0),
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      Customer updatedCustomer = Customer(
-                        widget.customer.id,
-                        _firstNameController.text,
-                        _lastNameController.text,
-                        _addressController.text,
-                        _birthdayController.text,
-                      );
-                      await widget.onUpdate(updatedCustomer);
-                      Navigator.of(context).popUntil((route) => route.isFirst); // Pop until the first route (CustomerListPage)
-                    },
-                    child: Text('Update'),
-                  ),
-                ],
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: _firstNameController,
+                  decoration: InputDecoration(labelText: 'First Name'),
+                ),
+                TextField(
+                  controller: _lastNameController,
+                  decoration: InputDecoration(labelText: 'Last Name'),
+                ),
+                TextField(
+                  controller: _addressController,
+                  decoration: InputDecoration(labelText: 'Address'),
+                ),
+                TextField(
+                  controller: _birthdayController,
+                  decoration: InputDecoration(labelText: 'Birthday'),
+                ),
+                SizedBox(height: 16.0),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        Customer updatedCustomer = Customer(
+                          widget.customer.id,
+                          _firstNameController.text,
+                          _lastNameController.text,
+                          _addressController.text,
+                          _birthdayController.text,
+                        );
+                        await widget.onUpdate(updatedCustomer);
+                        Navigator.of(context).popUntil((route) => route.isFirst); // Pop until the first route (CustomerListPage)
+                      },
+                      child: Text('Update'),
+                    ),
+                  ],
+                ),
+              ],
+            )
           ),
         )
-      ),
-    );
+      );
   }
 }

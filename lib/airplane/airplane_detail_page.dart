@@ -37,92 +37,189 @@ class _AirplaneDetailPageState extends State<AirplaneDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Airplane Details'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _typeController,
-                decoration: InputDecoration(labelText: 'Type'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter airplane type';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _passengersController,
-                decoration: InputDecoration(labelText: 'Number of Passengers'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter number of passengers';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _maxSpeedController,
-                decoration: InputDecoration(labelText: 'Max Speed (km/h)'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter max speed';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _rangeController,
-                decoration: InputDecoration(labelText: 'Range (km)'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter range';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    var size = MediaQuery.of(context).size;
+    var width = size.width;
+    var height = size.height;
+
+    if ((width > height) && (width > 720)){
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Airplane Details'),
+          automaticallyImplyLeading: false,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        final updatedAirplane = Airplane(
-                          widget.airplane.id,
-                          _typeController.text,
-                          int.parse(_passengersController.text),
-                          double.parse(_maxSpeedController.text),
-                          double.parse(_rangeController.text),
-                        );
-                        widget.onUpdate(updatedAirplane);
-                        Navigator.of(context).pop();
+                  TextFormField(
+                    controller: _typeController,
+                    decoration: InputDecoration(labelText: 'Type'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter airplane type';
                       }
+                      return null;
                     },
-                    child: Text('Update'),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      widget.onDelete(widget.airplane);
-                      Navigator.of(context).pop();
+                  TextFormField(
+                    controller: _passengersController,
+                    decoration: InputDecoration(labelText: 'Number of Passengers'),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter number of passengers';
+                      }
+                      return null;
                     },
-                    child: Text('Delete'),
+                  ),
+                  TextFormField(
+                    controller: _maxSpeedController,
+                    decoration: InputDecoration(labelText: 'Max Speed (km/h)'),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter max speed';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _rangeController,
+                    decoration: InputDecoration(labelText: 'Range (km)'),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter range';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            final updatedAirplane = Airplane(
+                              widget.airplane.id,
+                              _typeController.text,
+                              int.parse(_passengersController.text),
+                              double.parse(_maxSpeedController.text),
+                              double.parse(_rangeController.text),
+                            );
+                            widget.onUpdate(updatedAirplane);
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text('Update'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          widget.onDelete(widget.airplane);
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Delete'),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    }else {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Airplane Details'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _typeController,
+                  decoration: InputDecoration(labelText: 'Type'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter airplane type';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _passengersController,
+                  decoration: InputDecoration(labelText: 'Number of Passengers'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter number of passengers';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _maxSpeedController,
+                  decoration: InputDecoration(labelText: 'Max Speed (km/h)'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter max speed';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _rangeController,
+                  decoration: InputDecoration(labelText: 'Range (km)'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter range';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          final updatedAirplane = Airplane(
+                            widget.airplane.id,
+                            _typeController.text,
+                            int.parse(_passengersController.text),
+                            double.parse(_maxSpeedController.text),
+                            double.parse(_rangeController.text),
+                          );
+                          widget.onUpdate(updatedAirplane);
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: Text('Update'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        widget.onDelete(widget.airplane);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Delete'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
   }
 }

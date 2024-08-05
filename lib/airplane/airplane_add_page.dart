@@ -33,69 +33,71 @@ class _AirplaneAddPageState extends State<AirplaneAddPage> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _typeController,
-                decoration: InputDecoration(labelText: 'Type'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter airplane type';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _passengersController,
-                decoration: InputDecoration(labelText: 'Number of Passengers'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter number of passengers';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _maxSpeedController,
-                decoration: InputDecoration(labelText: 'Max Speed (km/h)'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter max speed';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _rangeController,
-                decoration: InputDecoration(labelText: 'Range (km)'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter range';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    final newAirplane = Airplane(
-                      null, // ID will be auto-generated
-                      _typeController.text,
-                      int.parse(_passengersController.text),
-                      double.parse(_maxSpeedController.text),
-                      double.parse(_rangeController.text),
-                    );
-                    widget.onAdd(newAirplane);
-                    Navigator.of(context).pop();
-                  }
-                },
-                child: Text('Submit'),
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _typeController,
+                  decoration: InputDecoration(labelText: 'Type'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter airplane type';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _passengersController,
+                  decoration: InputDecoration(labelText: 'Number of Passengers'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter number of passengers';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _maxSpeedController,
+                  decoration: InputDecoration(labelText: 'Max Speed (km/h)'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter max speed';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _rangeController,
+                  decoration: InputDecoration(labelText: 'Range (km)'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter range';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      final newAirplane = Airplane(
+                        null, // ID will be auto-generated
+                        _typeController.text,
+                        int.parse(_passengersController.text),
+                        double.parse(_maxSpeedController.text),
+                        double.parse(_rangeController.text),
+                      );
+                      widget.onAdd(newAirplane);
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: Text('Submit'),
+                ),
+              ],
+            )
           ),
         ),
       ),
