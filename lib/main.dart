@@ -50,13 +50,6 @@ class MyApp extends StatelessWidget {
           airplaneDao: database.airplaneDao,  // Ensure you have airplaneDao in your AppDatabase
           sharedPreferences: sharedPreferences,
         ),
- //       '/flightList': (context) => FlightListPage(
- //         flightDao: database.flightDao, // Ensure you have flightDao in your AppDatabase
-//          sharedPreferences: sharedPreferences,
- //       ),
-//        '/reservationList': (context) => ReservationListPage(
- //         sharedPreferences: sharedPreferences,
- //       ),
         '/flightList': (context) => FlightListPage(
           flightDao: database.flightDao,  // Ensure you have airplaneDao in your AppDatabase
           sharedPreferences: sharedPreferences,
@@ -74,6 +67,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home Page'),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(
